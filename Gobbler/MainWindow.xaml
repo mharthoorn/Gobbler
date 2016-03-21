@@ -1,0 +1,103 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Gobbler"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="Gobbler.MainWindow"
+        Title="Gobbler - Syndication Feed Reader" Height="565" Width="848"
+        Closing="Window_Closing">
+
+    <Window.CommandBindings>
+        <CommandBinding Command="Refresh" Executed="ExecRefresh" />
+        <CommandBinding Command="Delete"  Executed="ExecDeleteNode" />
+        <CommandBinding Command="local:GobblerCommands.Edit" Executed="ExecEditFeed" />
+        <CommandBinding Command="local:GobblerCommands.AddToFavourites" Executed="ExecAddToFavourites" />
+        <CommandBinding Command="local:GobblerCommands.MarkRead" Executed="ExecMarkRead" />
+    </Window.CommandBindings>
+
+    <Window.InputBindings>
+        <KeyBinding Key="F5" Command="Refresh"  />
+        <KeyBinding Key="Delete" Command="Delete" />
+        <KeyBinding Key="F2" Command="local:GobblerCommands.Edit" />
+        <KeyBinding Key="Space" Command="local:GobblerCommands.MarkRead" />
+        <KeyBinding Key="Multiply" Command="local:GobblerCommands.AddToFavourites" />
+    </Window.InputBindings>
+    
+    <Grid Margin="0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="6"/>
+            <ColumnDefinition Width="*"/>
+
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24"/>
+            <RowDefinition/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Column="0" HorizontalAlignment="Stretch" Grid.Row="0" 
+			Grid.ColumnSpan="3" VerticalAlignment="Stretch" Margin="2" >
+            <MenuItem Header="File">
+                <MenuItem Header="New" Click="MenuNewFile_Click"/>
+                <MenuItem Header="Save" Click="MenuSaveFile_Click"/>
+                <MenuItem Header="Load" Click="MenuLoadFile_Click"/>
+                <Separator />
+                <MenuItem Header="Exit" Click="MenuExit_Click" />
+            </MenuItem>
+            <MenuItem Header="Folders">
+                <MenuItem Header="Add new folder" Click="MenuAddFolder_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Images/MenuFolderAdd.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Add new feed" Click="MenuAddFeed_Click">
+                    <MenuItem.Icon>
+                        <Image Source="Images/MenuFeedAdd.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator/>
+                <MenuItem Header="Edit" Command="local:GobblerCommands.Edit" />
+                <MenuItem Header="Delete" Command="Delete" />
+                <MenuItem Header="Refresh all feeds" Click="MenuRefreshAll_Click"/>
+                <MenuItem Header="Refresh selected feed" Command="Refresh">
+                    <MenuItem.Icon>
+                        <Image Source="Images/MenuRefresh.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+
+            </MenuItem>
+         
+            <MenuItem Header="Entries">
+                <MenuItem Command="local:GobblerCommands.AddToFavourites" InputGestureText="Star *">
+                    <MenuItem.Icon>
+                        <Image Source="Images/MenuStar.png" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Command="local:GobblerCommands.MarkRead" InputGestureText="Space"/>
+                <MenuItem Header="Show Archived entries" Click="MenuShowArchive_Click" />
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Header="About" Click="Click_About"/>
+            </MenuItem>
+        </Menu>
+
+        <Border BorderThickness="0" Grid.Column="0" Grid.Row="1" BorderBrush="DimGray" >
+            <local:FeedTreeView x:Name="tree">
+            </local:FeedTreeView>
+        </Border>
+        <Border BorderThickness="1" Grid.Column="2" Grid.Row="1" BorderBrush="White" >
+            <local:EntriesGrid x:Name="grid" Grid.Row="1" Grid.Column="2" />
+        </Border>
+
+        <GridSplitter Grid.Column="1" Grid.Row="1" Grid.RowSpan="2"
+			HorizontalAlignment="Stretch" Margin="0,0" 
+			VerticalAlignment="Stretch" Background="White"/>
+
+
+        <DockPanel Name="UpdateStatus" Grid.Column="0" Grid.Row="2">
+            <TextBlock Text="Refreshing: " />
+            <ProgressBar Margin="10,6" Name="bar" />
+        </DockPanel>
+    </Grid>
+
+</Window>

@@ -1,0 +1,114 @@
+﻿<UserControl x:Class="Gobbler.EntriesGrid"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <DataGrid Name="grid" 
+                      BorderBrush="Transparent"
+                      IsSynchronizedWithCurrentItem="True"
+                      CanUserAddRows="False"
+                      GridLinesVisibility="None"
+                      HeadersVisibility="None"  
+                      AutoGenerateColumns="False"
+                      SelectionUnit="FullRow"
+                      PreviewMouseDown="Mygrid_MouseDown"
+                      ItemsSource="{Binding Path=Items}" >
+
+            <DataGrid.Resources>
+                <Style x:Key="ReadUnRead" TargetType="TextBlock">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Path=Status}" Value="Unread">
+                            <Setter Property="FontWeight" Value="Bold"/> 
+                        </DataTrigger>
+
+                        <DataTrigger Binding="{Binding Path=Status}" Value="Read">
+                            <Setter Property="FontWeight" Value="Normal"/>
+                            <Setter Property="Foreground" Value="Silver" />
+                         </DataTrigger>
+    
+                        <DataTrigger Binding="{Binding Path=Status}" Value="Archived">
+                            <Setter Property="FontWeight" Value="Normal"/>
+                            <Setter Property="Foreground" Value="Silver" />
+                        </DataTrigger>
+                </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.CellStyle>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                </Style>
+            </DataGrid.CellStyle>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="BorderThickness" Value="0 0 0 1" />
+
+                </Style>
+            </DataGrid.RowStyle>
+            
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Status" Width="32" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Width="16">
+                                <Image.Style>
+                                    <Style TargetType="{x:Type Image}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Status}" Value="Read">
+                                                <Setter Property="Source" Value="Images/check-icon.png"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="Unread">
+                                                <Setter Property="Source" Value="Images/stop-icon.png"/>
+                                            </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Archived">
+                                            <Setter Property="Source" Value="Images/check-icon.png"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Status}" Value="Starred">
+                                            <Setter Property="Source" Value="Images/award.png"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Caption" Width="*" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                        <TextBlock Margin="2" VerticalAlignment="Center" 
+                                           Style="{StaticResource ReadUnRead}"
+                                           Height="18" Text="{Binding Path=Title}">
+
+                            <TextBlock.ContextMenu>
+                                <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}" >
+                                    <MenuItem Header="Mark as read" Click="ClickMarkEntryAsread"  InputGestureText="Space">
+                                            <MenuItem.InputBindings>
+                                                <KeyBinding Key="Space"/>
+                                            </MenuItem.InputBindings>
+                                        
+                                    </MenuItem>
+                                </ContextMenu>
+                            </TextBlock.ContextMenu>
+                        </TextBlock>
+                    </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="When" Width="90" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Margin="3" Height="18" Text="{Binding Path=When}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    
+</UserControl>
